@@ -1,6 +1,8 @@
 buildscript {
-    ext.kotlin_version = '1.1.51'
+    ext.kotlin_version = '1.2.50'
     repositories {
+        google()
+        jcenter()
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
     }
@@ -8,8 +10,8 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
-        classpath 'com.google.gms:google-services:3.1.0'
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'com.google.gms:google-services:4.0.2'
+        classpath 'io.fabric.tools:gradle:1.25.4'
     }
 }
 
@@ -37,13 +39,13 @@ def amazonurl = properties.hasProperty('amazonurl') ? properties.getProperty('am
 def releasePassword = properties.getProperty('releasePassword')
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.0'
 
     defaultConfig {
         applicationId "co.touchlab.droidcon.sf2017"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 107
         versionName "1.0.7"
 
@@ -112,7 +114,7 @@ android {
     }
 }
 
-def supportVersion = "26.1.0"
+def supportVersion = "27.1.1"
 def daggerVer = doppl_dagger_java
 
 dependencies {
@@ -127,7 +129,7 @@ dependencies {
     implementation "com.android.support:cardview-v7:$supportVersion"
     implementation "com.android.support:customtabs:$supportVersion"
 
-    annotationProcessor "android.arch.lifecycle:compiler:$doppl_arch_lifecycle_ext_java"
+    kapt "android.arch.lifecycle:compiler:$doppl_arch_lifecycle_ext_java"
 
     implementation "android.arch.lifecycle:runtime:$doppl_arch_lifecycle_java"
     j2objc "co.doppl.android.arch.lifecycle:runtime:$doppl_arch_lifecycle_doppl"
@@ -135,7 +137,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$doppl_arch_lifecycle_ext_java"
     j2objc "co.doppl.android.arch.lifecycle:extensions:$doppl_arch_lifecycle_ext_doppl"
 
-    annotationProcessor "android.arch.persistence.room:compiler:$doppl_arch_room_java"
+    kapt "android.arch.persistence.room:compiler:$doppl_arch_room_java"
 
     implementation "android.arch.persistence.room:runtime:$doppl_arch_room_java"
     j2objc "co.doppl.android.arch.persistence.room:runtime:$doppl_arch_room_doppl"
@@ -170,7 +172,7 @@ dependencies {
     j2objc "co.doppl.io.reactivex.rxjava2:rxandroid:$doppl_rxandroid_doppl"
 
     implementation "com.google.dagger:dagger:$daggerVer"
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVer"
+    kapt "com.google.dagger:dagger-compiler:$daggerVer"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVer"
     compileOnly 'javax.annotation:jsr250-api:1.0'
     j2objc "co.doppl.com.google.dagger:dagger:$doppl_dagger_doppl"

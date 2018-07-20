@@ -64,7 +64,7 @@ class EventDetailFragment : Fragment(), EventDetailViewModel.Host {
         var eventId = arguments?.getLong(EVENT_ID, -1)
         if (eventId == null || eventId == -1L) {
             if (activity == null) return -1L
-            eventId = activity.intent.getLongExtra(EVENT_ID, -1)
+            eventId = activity?.intent?.getLongExtra(EVENT_ID, -1) ?: -1
         }
 
         if (eventId == -1L)
@@ -80,7 +80,7 @@ class EventDetailFragment : Fragment(), EventDetailViewModel.Host {
     private fun findTrackIdArg(): String? {
         var trackId = arguments?.getString(TRACK_ID)
         if (trackId == null) {
-            trackId = activity.intent.getStringExtra(TRACK_ID)
+            trackId = activity?.intent?.getStringExtra(TRACK_ID)
         }
 
         return trackId
@@ -95,7 +95,7 @@ class EventDetailFragment : Fragment(), EventDetailViewModel.Host {
         viewModel.wire(this, eventId)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val activity = activity as AppCompatActivity
@@ -134,15 +134,16 @@ class EventDetailFragment : Fragment(), EventDetailViewModel.Host {
      */
     private fun updateFAB(event: Event) {
         //Follow Fab
+        val context = context ?: return
         fab.backgroundTintList = fabColorList
         fab.setColorFilter(trackColor)
         fab.rippleColor = ContextCompat.getColor(context, R.color.white)
 
         if (event.isRsvped) {
-            fab.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_check))
+            fab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check))
             fab.isActivated = true
         } else {
-            fab.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_plus))
+            fab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus))
             fab.isActivated = false
         }
 
@@ -170,7 +171,8 @@ class EventDetailFragment : Fragment(), EventDetailViewModel.Host {
      * Adds all the content to the recyclerView
      */
     private fun updateContent(event: Event, speakers: List<UserAccount>?, conflict: Boolean) {
-        val adapter = EventDetailAdapter(activity, viewModel, trackColor)
+        val context = context ?: return
+        val adapter = EventDetailAdapter(context, viewModel, trackColor)
 
         //Construct the time and venue string and add it to the adapter
         var formattedStart = event.startDateLong!!.formatDate(TIME_FORMAT)
@@ -211,6 +213,7 @@ class EventDetailFragment : Fragment(), EventDetailViewModel.Host {
      */
     private fun updateTrackColor(category: String?) {
         //Default to design
+        val context = context ?: return
         val track = if (!category.isNullOrBlank()) Track.findByServerName(category)
         else Track.findByServerName("Design")
 

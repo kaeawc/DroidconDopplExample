@@ -51,7 +51,7 @@ class EventDetailAdapter(private val context: Context,
         data.add(TextDetail(TYPE_FEEDBACK, link, 0))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_HEADER -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.item_event_header, parent, false)
@@ -79,7 +79,7 @@ class EventDetailAdapter(private val context: Context,
                 val view = LayoutInflater.from(context).inflate(R.layout.item_event_feedback, parent, false)
                 FeedbackVH(view)
             }
-            else -> null
+            else -> throw IllegalArgumentException("Unknown view type")
         }
     }
 
@@ -91,8 +91,8 @@ class EventDetailAdapter(private val context: Context,
         return data[position].getItemType()
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        when (holder?.itemViewType) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
             TYPE_HEADER -> {
                 val view = (holder as HeaderVH).itemView
                 view.title.text = (data[position] as HeaderDetail).title

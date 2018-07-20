@@ -42,15 +42,12 @@ class WelcomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val bundle = arguments
-        view?.setBackgroundColor(ContextCompat.getColor(context, bundle.getInt(BACKGROUND_COLOR_RES)))
-
-        val imageRes = bundle.getInt(IMAGE_RES)
-        image.setImageDrawable(ContextCompat.getDrawable(activity, imageRes))
-
-        titleTv.setText(bundle.getInt(TITLE_RES))
-        titleTv.setTextColor(ContextCompat.getColor(context, bundle.getInt(TEXT_COLOR_RES)))
-
-        descriptionTv.setText(bundle.getInt(DESC_RES))
-        descriptionTv.setTextColor(ContextCompat.getColor(context, bundle.getInt(TEXT_COLOR_RES)))
+        val context = context ?: return
+        bundle?.getInt(BACKGROUND_COLOR_RES)?.let { view?.setBackgroundColor(ContextCompat.getColor(context, it)) }
+        bundle?.getInt(IMAGE_RES)?.let { image.setImageDrawable(ContextCompat.getDrawable(context, it)) }
+        bundle?.getInt(TITLE_RES)?.let { titleTv.setText(it) }
+        bundle?.getInt(TEXT_COLOR_RES)?.let { titleTv.setTextColor(ContextCompat.getColor(context, it)) }
+        bundle?.getInt(DESC_RES)?.let { descriptionTv.setText(it) }
+        bundle?.getInt(TEXT_COLOR_RES)?.let { descriptionTv.setTextColor(ContextCompat.getColor(context, it)) }
     }
 }

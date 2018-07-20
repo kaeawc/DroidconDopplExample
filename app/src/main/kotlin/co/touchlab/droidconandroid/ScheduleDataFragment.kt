@@ -32,7 +32,7 @@ class ScheduleDataFragment : Fragment(), ScheduleDataViewModel.Host {
         return inflater.inflate(R.layout.fragment_schedule_data, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (resources.getBoolean(R.bool.is_tablet)) {
             eventList.layoutManager = GridLayoutManager(activity, TABLET_COLUMNS)
@@ -40,8 +40,8 @@ class ScheduleDataFragment : Fragment(), ScheduleDataViewModel.Host {
             eventList.layoutManager = LinearLayoutManager(activity)
         }
 
-        allEvents = arguments.getBoolean(ALL_EVENTS, true)
-        eventList.adapter = EventAdapter(activity,
+        allEvents = arguments?.getBoolean(ALL_EVENTS, true) ?: true
+        eventList.adapter = EventAdapter(view.context,
                 allEvents,
                 ScheduleEventClickListener(),
                 AppManager.getInstance().appComponent.prefs)
@@ -54,7 +54,7 @@ class ScheduleDataFragment : Fragment(), ScheduleDataViewModel.Host {
 
     override fun onPause() {
         super.onPause()
-        arguments.putBoolean(ALL_EVENTS, allEvents)
+        arguments?.putBoolean(ALL_EVENTS, allEvents)
         viewModel.unwire()
     }
 
@@ -74,16 +74,19 @@ class ScheduleDataFragment : Fragment(), ScheduleDataViewModel.Host {
 
     private inner class ScheduleEventClickListener : EventClickListener {
         override fun onEventClick(event: Event) {
+            val activity = activity ?: return
             EventDetailActivity.callMe(activity, event.id, event.category)
         }
     }
 
     override fun loadCallback(dayScheduleArray: Array<DaySchedule>) {
         Log.w("ScheduleDataFragment", "loadCallback: "+ dayScheduleArray.size)
-        val dayString = ConferenceDataHelper.dateToDayString(Date(arguments.getLong(DAY)))
+        val day = arguments?.getLong(DAY)
+        val dayDate = if (day == null) Date() else Date(day)
+        val dayString = ConferenceDataHelper.dateToDayString(dayDate)
 
         for (daySchedule in dayScheduleArray) {
-            if(daySchedule.dayString?.equals(dayString) ?: false)
+            if(daySchedule.dayString?.equals(dayString) == true)
             {
                 updateAdapter(daySchedule.hourHolders)
             }

@@ -44,7 +44,7 @@ class SponsorsListFragment : Fragment(), SponsorsViewModel.Host {
         return inflater.inflate(R.layout.fragment_sponsors_list, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sponsor_recycler.layoutManager = layoutManager
         sponsor_recycler.adapter = adapter
