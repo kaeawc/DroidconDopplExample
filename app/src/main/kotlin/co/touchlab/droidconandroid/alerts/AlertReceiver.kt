@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.support.v4.app.NotificationCompat
-import co.touchlab.droidconandroid.DroidconApplication
 import co.touchlab.droidconandroid.EventDetailActivity
 import co.touchlab.droidconandroid.R
 
@@ -23,15 +22,12 @@ class AlertReceiver : BroadcastReceiver() {
 
         if (ALERT_ACTION == intent.action) {
 
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager ?: return
 
             val eventID = intent.getLongExtra(EXTRA_EVENT_ID, -1)
-            if(eventID.toInt() == -1)
-            {
+            if(eventID.toInt() == -1) {
                 notificationManager.cancelAll()
-            }
-            else
-            {
+            } else {
                 val eventCategory = intent.getStringExtra(EXTRA_EVENT_CATEGORY)
                 val eventName = intent.getStringExtra(EXTRA_EVENT_NAME)
                 val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -43,7 +39,7 @@ class AlertReceiver : BroadcastReceiver() {
 
                 val pendingIntent = stackBuilder.getPendingIntent(13342, PendingIntent.FLAG_UPDATE_CURRENT)
 
-                val notification = NotificationCompat.Builder(context)
+                val notification = NotificationCompat.Builder(context, "updates")
                         .setSmallIcon(R.drawable.ic_notification_smallicon_color)
                         .setContentTitle(context.getString(R.string.notif_title))
                         .setContentText(context.getString(R.string.notif_body, eventName))
@@ -53,7 +49,6 @@ class AlertReceiver : BroadcastReceiver() {
                         .setContentIntent(pendingIntent)
                         .build()
 
-                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.notify(0, notification)
             }
         }
