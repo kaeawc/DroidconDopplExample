@@ -20,7 +20,7 @@ class SponsorFragmentPagerAdapter(private val context: Context, fm: FragmentMana
         return SponsorsListFragment.newInstance(position)
     }
 
-    override fun getPageTitle(position: Int): CharSequence {
+    override fun getPageTitle(position: Int): CharSequence? {
         return when (position) {
             // Emoji not supported in xml for anything below Android 6.0
             SponsorsInteractor.SPONSOR_GENERAL -> context.getString(R.string.sponsors_tab_general) + String(Character.toChars(UNICODE_COOL_EMOJI))

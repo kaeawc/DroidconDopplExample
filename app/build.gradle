@@ -25,6 +25,7 @@ repositories {
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.j2objcgradle.gradle'
+apply plugin: 'kotlin-kapt'
 
 Properties properties = new Properties()
 try {
@@ -40,7 +41,7 @@ def releasePassword = properties.getProperty('releasePassword')
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.0'
+    buildToolsVersion '28.0.1'
 
     defaultConfig {
         applicationId "co.touchlab.droidcon.sf2017"
@@ -48,6 +49,7 @@ android {
         targetSdkVersion 28
         versionCode 107
         versionName "1.0.7"
+        multiDexEnabled true
 
         buildConfigField "String", "BASE_URL", "\"$baseurl\""
         buildConfigField "String", "AMAZON_URL", "\"$amazonurl\""
@@ -114,7 +116,7 @@ android {
     }
 }
 
-def supportVersion = "27.1.1"
+def supportVersion = "28.0.0-alpha1"
 def daggerVer = doppl_dagger_java
 
 dependencies {

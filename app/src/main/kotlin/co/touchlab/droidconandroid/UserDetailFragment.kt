@@ -69,7 +69,7 @@ class UserDetailFragment : Fragment(), UserDetailViewModel.Host {
     }
 
     private fun findUserId(): Long {
-        val userId = activity.intent.getLongExtra(UserDetailActivity.USER_ID, 0L)
+        val userId = activity?.intent?.getLongExtra(UserDetailActivity.USER_ID, 0L) ?: 0L
         if (userId == 0L)
             findUserError()
 
@@ -77,10 +77,9 @@ class UserDetailFragment : Fragment(), UserDetailViewModel.Host {
     }
 
     override fun findUserError() {
+        val activity = activity ?: return
         Toaster.showMessage(activity, getString(R.string.user_not_found_error))
-
-        if (activity is UserDetailActivity)
-            (activity as UserDetailActivity).onFragmentFinished()
+        (activity as? UserDetailActivity)?.onFragmentFinished()
     }
 
     override fun onUserFound(userAccount: UserAccount) {
@@ -88,6 +87,7 @@ class UserDetailFragment : Fragment(), UserDetailViewModel.Host {
     }
 
     private fun showUserData(userAccount: UserAccount) {
+        val context = context ?: return
         val avatarKey = userAccount.avatarImageUrl()
         if (!avatarKey.isNullOrBlank()) {
             val callback = object : Callback {
@@ -110,7 +110,7 @@ class UserDetailFragment : Fragment(), UserDetailViewModel.Host {
             placeholder_emoji.text = EmojiUtil.getEmojiForUser(userAccount.name)
         }
 
-        val iconsDefaultColor = ContextCompat.getColor(activity, R.color.social_icons)
+        val iconsDefaultColor = ContextCompat.getColor(context, R.color.social_icons)
         makeIconsPretty(iconsDefaultColor)
 
         if (!userAccount.name.isNullOrBlank()) {
@@ -190,33 +190,28 @@ class UserDetailFragment : Fragment(), UserDetailViewModel.Host {
 
     private fun openLink(webPage: Uri?) {
         val intent = Intent(Intent.ACTION_VIEW, webPage)
-        if (intent.resolveActivity(activity.packageManager) != null) {
+        val packageManager = activity?.packageManager ?: return
+        if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
     }
 
     private fun makeIconsPretty(darkVibrantColor: Int) {
+        val context = context ?: return
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            val contactDrawable = ContextCompat.getDrawable(activity,
-                    R.drawable.vic_person_add_black_24dp)
-            contactDrawable.colorFilter = PorterDuffColorFilter(darkVibrantColor,
-                    PorterDuff.Mode.SRC_IN)
+            val contactDrawable = ContextCompat.getDrawable(context, R.drawable.vic_person_add_black_24dp) ?: return
+            contactDrawable.colorFilter = PorterDuffColorFilter(darkVibrantColor, PorterDuff.Mode.SRC_IN)
 
-            val companyDrawable = ContextCompat.getDrawable(activity,
-                    R.drawable.vic_company_black_24dp)
-            companyDrawable.colorFilter = PorterDuffColorFilter(darkVibrantColor,
-                    PorterDuff.Mode.SRC_IN)
+            val companyDrawable = ContextCompat.getDrawable(context, R.drawable.vic_company_black_24dp) ?: return
+            companyDrawable.colorFilter = PorterDuffColorFilter(darkVibrantColor, PorterDuff.Mode.SRC_IN)
             company2.setCompoundDrawablesWithIntrinsicBounds(companyDrawable, null, null, null)
 
-            val websiteDrawable = ContextCompat.getDrawable(activity,
-                    R.drawable.vic_website_black_24dp)
-            websiteDrawable.colorFilter = PorterDuffColorFilter(darkVibrantColor,
-                    PorterDuff.Mode.SRC_IN)
+            val websiteDrawable = ContextCompat.getDrawable(context, R.drawable.vic_website_black_24dp) ?: return
+            websiteDrawable.colorFilter = PorterDuffColorFilter(darkVibrantColor, PorterDuff.Mode.SRC_IN)
             website.setCompoundDrawablesWithIntrinsicBounds(websiteDrawable, null, null, null)
 
-            val bioDrawable = ContextCompat.getDrawable(activity, R.drawable.vic_bio_black_24dp)
-            bioDrawable.colorFilter = PorterDuffColorFilter(darkVibrantColor,
-                    PorterDuff.Mode.SRC_IN)
+            val bioDrawable = ContextCompat.getDrawable(context, R.drawable.vic_bio_black_24dp) ?: return
+            bioDrawable.colorFilter = PorterDuffColorFilter(darkVibrantColor, PorterDuff.Mode.SRC_IN)
             bio.setCompoundDrawablesWithIntrinsicBounds(bioDrawable, null, null, null)
         }
     }

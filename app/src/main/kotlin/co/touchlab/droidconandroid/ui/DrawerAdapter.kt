@@ -17,7 +17,7 @@ class DrawerAdapter(private val context: Context,
                     private val drawerClickListener: DrawerClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var selectedPos = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_NAVIGATION -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.item_drawer, parent, false)
@@ -34,7 +34,7 @@ class DrawerAdapter(private val context: Context,
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             VIEW_TYPE_HEADER -> {
                 val headerHolder = holder as HeaderViewHolder
@@ -47,7 +47,7 @@ class DrawerAdapter(private val context: Context,
                 val navItem = dataSet[position] as NavigationItem
                 val view = (holder as NavigationViewHolder).itemView
                 view.title.setText(navItem.titleRes)
-                val drawable = ContextCompat.getDrawable(context, navItem.iconRes)
+                val drawable = ContextCompat.getDrawable(context, navItem.iconRes) ?: return
 
                 view.isSelected = selectedPos == position
                 if (view.isSelected) {

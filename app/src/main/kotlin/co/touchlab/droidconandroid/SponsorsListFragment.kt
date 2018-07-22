@@ -30,11 +30,11 @@ class SponsorsListFragment : Fragment(), SponsorsViewModel.Host {
         }
     }
 
-    private val adapter: SponsorsAdapter by lazy { SponsorsAdapter(activity) }
+    private val adapter: SponsorsAdapter by lazy { SponsorsAdapter(context!!) }
 
-    private val layoutManager: GridLayoutManager by lazy { GridLayoutManager(activity, 1) }
+    private val layoutManager: GridLayoutManager by lazy { GridLayoutManager(context, 1) }
 
-    private val type: Int by lazy { arguments.getInt(SPONSOR_TYPE) }
+    private val type: Int by lazy { arguments?.getInt(SPONSOR_TYPE) ?: 0 }
 
     private val viewModel: SponsorsViewModel by lazy {
         ViewModelProviders.of(this, SponsorsViewModel.factory()).get(SponsorsViewModel::class.java)

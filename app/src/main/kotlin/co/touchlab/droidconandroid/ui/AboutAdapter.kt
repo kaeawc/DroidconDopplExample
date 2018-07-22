@@ -26,12 +26,12 @@ class AboutAdapter(private val context: Context, private val appPrefs: AppPrefs)
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_about, parent, false)
         return AboutVH(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val view = (holder as AboutVH).itemView
         val data = dataset[position]
         if(data.bodyRes == null) {

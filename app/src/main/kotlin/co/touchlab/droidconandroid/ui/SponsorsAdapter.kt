@@ -30,7 +30,7 @@ class SponsorsAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
             return VIEW_TYPE_EMPTY
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_ITEM -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.item_sponsor, parent, false)
@@ -43,7 +43,7 @@ class SponsorsAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == VIEW_TYPE_ITEM) {
             val view = (holder as SponsorVH).itemView
             val data = dataset[position] as SponsorsResult.Sponsor

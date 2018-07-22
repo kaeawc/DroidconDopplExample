@@ -35,7 +35,7 @@ class EventAdapter(private val context: Context,
         return filteredData.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_EVENT -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.item_event, parent, false)
