@@ -179,7 +179,7 @@ dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'
     j2objc "co.doppl.com.google.dagger:dagger:$doppl_dagger_doppl"
 
-    implementation 'com.google.firebase:firebase-messaging:11.4.2'
+    implementation 'com.google.firebase:firebase-messaging:17.1.0'
 
     testImplementation "junit:junit:$doppl_junit_java"
     testJ2objc "org.j2objcgradle.junit:junit:$doppl_junit_doppl"

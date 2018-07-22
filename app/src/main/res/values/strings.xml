@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="channel_updates_name">Updates</string>
+    <string name="channel_updates_description">Messages about schedule changes and other important updates</string>
+
     <string name="app_name">Droidcon SF 2017!</string>
     <!--<string name="convention_id">61100</string>-->
     <string name="convention_id">97450</string>

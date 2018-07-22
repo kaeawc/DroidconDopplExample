@@ -1,12 +1,19 @@
 package co.touchlab.droidconandroid;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.StrictMode;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+
+import co.touchlab.droidconandroid.alerts.NotificationService;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.IOException;
@@ -127,6 +134,27 @@ public class DroidconApplication extends Application
 
         AppManager instance = AppManager.getInstance();
         instance.seed(loadDataSeed);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel() {
+        CharSequence name = getString(R.string.channel_updates_name);
+        String description = getString(R.string.channel_updates_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel("updates", name, importance);
+        channel.setDescription(description);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        try {
+            notificationManager.createNotificationChannel(channel);
+        } catch (NullPointerException exception) {
+            // Do nothing
+        }
     }
 
     public static String getCurrentProcessName(Context context)

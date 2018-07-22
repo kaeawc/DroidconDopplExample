@@ -8,6 +8,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.support.v4.app.NotificationCompat
 import android.util.Log
+import co.touchlab.droidconandroid.BuildConfig
 import co.touchlab.droidconandroid.EventDetailActivity
 import co.touchlab.droidconandroid.R
 import co.touchlab.droidconandroid.ScheduleActivity
@@ -37,8 +38,8 @@ class NotificationService : FirebaseMessagingService() {
         try {
             val data = remoteMessage.data
             val type = data[TYPE]
-            val notification = remoteMessage.notification
-            Log.d(TAG, "Received firebase message: " + type)
+            val notification = remoteMessage.notification ?: return
+            Log.d(TAG, "Received firebase message: $type")
 
             when (type) {
                 "updateSchedule" -> {
@@ -53,25 +54,24 @@ class NotificationService : FirebaseMessagingService() {
                     sendIntentNotification(title!!, message!!, intent, NotificationUtils.EVENT_CHANNEL_ID)
                 }
                 "version" -> {
-                    val packageInfo = packageManager.getPackageInfo(packageName, 0)
-                    val versionCode = packageInfo.versionCode
-                    val checkCode = data[VERSION_CODE]!!.toInt()
+                    val versionCode = BuildConfig.VERSION_CODE
+                    val checkCode = data[VERSION_CODE]?.toInt() ?: return
                     if (versionCode < checkCode) {
                         var intent = Intent(Intent.ACTION_VIEW,
-                                Uri.parse("market://details?id=" + packageName))
+                                Uri.parse("market://details?id=$packageName"))
 
                         if (intent.resolveActivity(packageManager) == null) {
                             intent = Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://play.google.com/store/apps/details?id=" + packageName))
+                                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName"))
                         }
                         sendVersionIntentNotification(intent, NotificationUtils.VERSION_CHANNEL_ID)
                     }
                 }
                 "general" -> {
                     val intent = Intent(this, ScheduleActivity::class.java)
-                    val title = if (notification.title.isNullOrBlank()) getString(R.string.app_name) else notification.title
-                    val message = if (notification.body.isNullOrBlank()) getString(R.string.welcome_0_title) else notification.body
-                    sendIntentNotification(title!!, message!!, intent, NotificationUtils.GENERAL_CHANNEL_ID)
+                    val title = if (notification.title.isNullOrBlank()) getString(R.string.app_name) else notification.title ?: return
+                    val message = if (notification.body.isNullOrBlank()) getString(R.string.welcome_0_title) else notification.body ?: return
+                    sendIntentNotification(title, message, intent, NotificationUtils.GENERAL_CHANNEL_ID)
                 }
             }
         } catch (e: Exception) {
@@ -79,8 +79,7 @@ class NotificationService : FirebaseMessagingService() {
         }
     }
 
-    private fun sendVersionIntentNotification(intent: Intent, channelId: String)
-    {
+    private fun sendVersionIntentNotification(intent: Intent, channelId: String) {
         val title = getString(R.string.app_name)
         val message = getString(R.string.version_message)
 
@@ -93,7 +92,7 @@ class NotificationService : FirebaseMessagingService() {
                 PendingIntent.FLAG_ONE_SHOT)
 
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this)
+        val notificationBuilder = NotificationCompat.Builder(this, "updates")
                 .setSmallIcon(R.drawable.ic_notification_smallicon_color)
                 .setContentTitle(title)
                 .setContentText(message)
@@ -105,9 +104,5 @@ class NotificationService : FirebaseMessagingService() {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
-    }
-
-    override fun onDeletedMessages() {
-        super.onDeletedMessages()
     }
 }
